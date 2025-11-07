@@ -36,6 +36,18 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
+### Prebuilt binaries (no install)
+
+Starting from v1.0.0, we publish ready-to-run binaries for macOS, Linux and Windows in the GitHub Releases. Download the archive for your OS, extract it, and run `ddosint` (or `ddosint.exe` on Windows) from any folder.
+
+```bash
+# macOS / Linux example
+./ddosint stats overview
+
+# Windows (PowerShell)
+./ddosint.exe stats overview
+```
+
 ## Configuration
 
 ### Environment Variables
@@ -225,6 +237,9 @@ The CLI provides clear error messages for common issues:
 
 ### Project Structure
 
+# Local binary build (optional)
+./scripts/build_local.sh
+# Binary will be in ./dist
 ```
 ddosint/
 ├── ddosint/
