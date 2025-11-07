@@ -258,7 +258,7 @@ This project is part of the Ransomfeed project ecosystem.
 
 ## Related Projects
 
-- [DDoSia Monitor](https://github.com/yourusername/ddosia-monitor) - The web platform this CLI interfaces with
+- [DDoSia Monitor](https://ddosia.rfeed.it) - The web platform this CLI interfaces with
 
 ## Support
 
