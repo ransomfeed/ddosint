@@ -30,13 +30,15 @@ jobs:
           pip install -e .
 
       - name: Verify installation
+        shell: bash
         run: |
           python --version
-          which python
+          which python || where python
           python -m pip list | grep -i pyinstaller || echo "PyInstaller not found in pip list"
           pyinstaller --version || python -m PyInstaller --version || echo "PyInstaller command not found"
 
       - name: Verify files exist
+        shell: bash
         run: |
           pwd
           ls -la
