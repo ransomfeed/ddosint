@@ -9,7 +9,16 @@ if ! command -v pyinstaller >/dev/null 2>&1; then
   python3 -m pip install pyinstaller
 fi
 
-pyinstaller -F -n ddosint -m ddosint.cli
+# Install package in editable mode so PyInstaller can find modules
+python3 -m pip install -e .
+
+pyinstaller --onefile --name ddosint \
+  --hidden-import ddosint \
+  --hidden-import ddosint.cli \
+  --hidden-import ddosint.api_client \
+  --hidden-import ddosint.export \
+  --collect-all ddosint \
+  ddosint/cli.py
 
 echo "Binary available in ./dist" 
 
