@@ -76,30 +76,33 @@ jobs:
     name: Create GitHub Release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Assets
+      - name: Create Release and Upload Assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for f in $(ls artifacts/**/ddosint-*); do
-            echo "Uploading $f"
-            gh release upload ${{ github.ref_name }} "$f" --clobber
-          done
+          # Find all artifact files
+          ARTIFACTS=$(find artifacts -type f \( -name "*.tar.gz" -o -name "*.zip" \))
+          echo "Found artifacts:"
+          echo "$ARTIFACTS"
+          
+          # Check if release exists
+          if gh release view ${{ github.ref_name }} &>/dev/null; then
+            echo "Release already exists, uploading assets..."
+            echo "$ARTIFACTS" | xargs -I {} gh release upload ${{ github.ref_name }} {} --clobber
+          else
+            echo "Creating new release..."
+            echo "$ARTIFACTS" | xargs gh release create ${{ github.ref_name }} \
+              --title "${{ github.ref_name }}" \
+              --notes "Release ${{ github.ref_name }}" \
+              --latest
+          fi
         shell: bash
 
