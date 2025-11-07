@@ -26,11 +26,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pyinstaller -r requirements.txt
+          pip install -e .
+
+      - name: Verify files exist
+        run: |
+          pwd
+          ls -la
+          ls -la ddosint/
+          test -f ddosint/cli.py && echo "✓ cli.py exists" || echo "✗ cli.py NOT FOUND"
 
       - name: Build onefile binary
         shell: bash
         run: |
-          pyinstaller -F -n ddosint -m ddosint.cli
+          python -m pyinstaller --onefile --name ddosint --hidden-import ddosint --hidden-import ddosint.cli --hidden-import ddosint.api_client --hidden-import ddosint.export --collect-all ddosint ddosint/cli.py
 
       - name: Archive artifact (Unix)
         if: runner.os != 'Windows'
